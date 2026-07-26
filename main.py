@@ -5,7 +5,6 @@
 
 
 import os
-import psycopg
 import random
 import pandas as pd
 import urllib.parse
@@ -14,141 +13,10 @@ from faker import Faker
 from sqlalchemy import create_engine, text, Integer
 from dotenv import load_dotenv
 
+from db.schema import create_tables
+
 # Load environment variables from .env file
 load_dotenv()
-
-def create_tables():
-    try:
-        # Connect to the database
-        with psycopg.connect(
-            host=os.getenv("DB_HOST"),
-            dbname=os.getenv("DB_NAME"),
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            port=os.getenv("DB_PORT")
-        ) as conn:
-
-            # Open a cursor to perform database operations
-            with conn.cursor() as cur:
-
-                # SQL command to create the brand table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS brand (
-                    brand_id SERIAL PRIMARY KEY,
-                    brand_name VARCHAR(100) UNIQUE,
-                    country VARCHAR(50),
-                    create_at TIMESTAMP
-                );
-                """)
-                # SQL command to create the category table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS category (
-                    category_id SERIAL PRIMARY KEY,
-                    category_name VARCHAR(100) UNIQUE,
-                    parent_category_id INT REFERENCES category(category_id),
-                    level SMALLINT CHECK (level IN (1, 2)),
-                    create_at TIMESTAMP
-                );
-                """)
-
-                # SQL command to create the seller table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS seller (
-                    seller_id SERIAL PRIMARY KEY,
-                    seller_name VARCHAR(150),
-                    join_date DATE,
-                    seller_type VARCHAR(50) CHECK (seller_type IN ('Official', 'Marketplace')),
-                    rating DECIMAL(2,1),
-                    country VARCHAR(50)
-                );
-                """)
-
-                # SQL command to create the customer table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS customer (
-                    customer_id SERIAL PRIMARY KEY,
-                    customer_name VARCHAR(150),
-                    email VARCHAR(150) UNIQUE,
-                    phone VARCHAR(20) UNIQUE,
-                    gender VARCHAR(10) CHECK (gender IN ('Male', 'Female')),
-                    address VARCHAR(255),
-                    city VARCHAR(100),
-                    created_at TIMESTAMP
-                );
-                """)
-
-                # SQL command to create the product table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS product (
-                    product_id SERIAL PRIMARY KEY,
-                    product_name VARCHAR(200),
-                    category_id INT REFERENCES category(category_id),
-                    brand_id INT REFERENCES brand(brand_id),
-                    seller_id INT REFERENCES seller(seller_id),
-                    price DECIMAL(12,2) CHECK (price > 0),
-                    stock_qty INT CHECK (stock_qty >= 0),
-                    rating DECIMAL(2,1) CHECK (rating >= 0 AND rating <= 5),
-                    created_at TIMESTAMP,
-                    is_active BOOLEAN DEFAULT TRUE
-                );
-                """)
-
-                # SQL command to create the order table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS "order" (
-                    order_id SERIAL PRIMARY KEY,
-                    customer_id INT REFERENCES customer(customer_id),
-                    order_date TIMESTAMP,
-                    status VARCHAR(20) CHECK (status IN ('PLACED','PAID','SHIPPED','DELIVERED','CANCELLED','RETURNED')),
-                    total_amount DECIMAL(12,2) CHECK (total_amount >= 0),
-                    created_at TIMESTAMP CHECK (created_at >= order_date)
-                );
-                """)
-
-                # SQL command to create the order_item table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS order_item (
-                    order_item_id BIGSERIAL PRIMARY KEY,
-                    order_id INT REFERENCES "order"(order_id),
-                    product_id INT REFERENCES product(product_id),
-                    order_date TIMESTAMP,
-                    quantity INT CHECK (quantity > 0),
-                    unit_price DECIMAL(12,2) CHECK (unit_price > 0),
-                    subtotal DECIMAL(12,2) CHECK (subtotal = quantity * unit_price),
-                    created_at TIMESTAMP CHECK (created_at >= order_date)
-                );
-                """)
-
-                # SQL command to create the promotion table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS promotion (
-                    promotion_id SERIAL PRIMARY KEY,
-                    promotion_name VARCHAR(100),
-                    promotion_type VARCHAR(50),
-                    discount_type VARCHAR(20) CHECK (discount_type IN ('percentage', 'fixed_amount')),
-                    discount_value NUMERIC(10,2) CHECK (discount_value > 0 AND (discount_type = 'fixed_amount' OR discount_value <= 100)),
-                    start_date DATE CHECK (start_date >= DATE(created_at)),
-                    end_date DATE CHECK (end_date >= start_date),
-                    created_at TIMESTAMP
-                );
-                """)
-
-                # SQL command to create the promotion_product table
-                cur.execute("""
-                CREATE TABLE IF NOT EXISTS promotion_product (
-                    promo_product_id SERIAL PRIMARY KEY,
-                    promotion_id INT REFERENCES promotion(promotion_id),
-                    product_id INT REFERENCES product(product_id),
-                    created_at TIMESTAMP
-                );
-                """)
-
-                # Commit the changes
-                conn.commit()
-                print("Tables 'brand', 'category', 'seller', 'customer', 'product', 'order', 'order_item', 'promotion' and 'promotion_product' checked/created successfully.")
-
-    except Exception as error:
-        print(f"Error while creating tables: {error}")
 
 def insert_fake_data():
     # 1. Khởi tạo Faker (Hỗ trợ tiếng Việt cho Customer/Address nếu muốn, ở đây dùng chuẩn en_US/vi_VN)
