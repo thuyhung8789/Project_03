@@ -22,8 +22,8 @@ def generate_promotion_data(engine, fake, num_promotions):
     logger.info("Generating Promotion data...")
     promotions = []
     for _ in range(num_promotions):
-        created_at = fake.date_time_between(start_date=datetime(2025, 12, 1), end_date=datetime(2026, 1, 31))
-        start_date = created_at + timedelta(days=random.randint(0, 60))
+        start_date = fake.date_between(start_date=datetime(2026, 1, 1), end_date=datetime(2026, 4, 30))
+        created_at = fake.date_time_between(start_date=datetime(2025, 12, 1), end_date=datetime.combine(start_date, datetime.max.time()))
         end_date = start_date + timedelta(days=random.randint(30, 50))
         discount_type = random.choice(['percentage', 'fixed_amount'])
         
