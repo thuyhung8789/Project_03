@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "thuyhung8789",email = "hathithuydtvt@gmail.com"}
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = [
     "faker (>=40.31.0,<41.0.0)",
     "pandas (>=3.0.3,<4.0.0)",
