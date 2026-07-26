@@ -56,7 +56,7 @@ def insert_fake_data():
         brands.append({
             'brand_name': b_name,
             'country': fake.country(),
-            'create_at': fake.date_time_between(start_date='-2y', end_date='-1y')
+            'created_at': fake.date_time_between(start_date='2025-01-01', end_date='2025-12-31')
         })
     df_brand = pd.DataFrame(brands)
     df_brand.to_sql('brand', engine, if_exists='append', index=False)
@@ -77,7 +77,7 @@ def insert_fake_data():
             'category_name': main,
             'parent_category_id': None,
             'level': 1,
-            'create_at': fake.date_time_between(start_date='-2y', end_date='-18m')
+            'created_at': fake.date_time_between(start_date='2025-01-01', end_date='2025-12-31')
         })
 
     df_main_cat = pd.DataFrame(categories)
@@ -100,7 +100,7 @@ def insert_fake_data():
             'category_name': sub,
             'parent_category_id': main_cat_map[parent],
             'level': 2,
-            'create_at': fake.date_time_between(start_date='-18m', end_date='-1y')
+            'created_at': fake.date_time_between(tart_date='2025-01-01', end_date='2025-12-31')
         })
 
     df_sub_cat = pd.DataFrame(sub_cat_data)
@@ -116,7 +116,7 @@ def insert_fake_data():
     for _ in range(NUM_SELLERS):
         sellers.append({
             'seller_name': f"{fake.company()} Shop",
-            'join_date': fake.date_between(start_date='-2y', end_date='now'),
+            'join_date': fake.date_between(start_date='2025-01-01', end_date='2025-12-31'),
             'seller_type': random.choice(['Official', 'Marketplace']),
             'rating': round(random.uniform(3.0, 5.0), 1),
             'country': 'Vietnam'
@@ -143,7 +143,7 @@ def insert_fake_data():
             'gender': random.choice(['Male', 'Female']),
             'address': fake.street_address(),
             'city': fake.city(),
-            'created_at': fake.date_time_between(start_date='-2y', end_date='now')
+            'created_at': fake.date_time_between(start_date='2025-01-01', end_date='2025-12-31')
         })
 
     df_customer = pd.DataFrame(customers)
@@ -165,7 +165,7 @@ def insert_fake_data():
             'price': round(random.uniform(100000, 50000000), -3), # Giá làm tròn hàng nghìn
             'stock_qty': random.randint(0, 500),
             'rating': round(random.uniform(3.0, 5.0), 1),
-            'created_at': fake.date_time_between(start_date='-1y', end_date='now'),
+            'created_at': fake.date_time_between(start_date='2025-06-01', end_date='2025-12-31'),
             'is_active': random.choice([True, True, True, False]) # 75% active
         })
 
@@ -185,7 +185,7 @@ def insert_fake_data():
     order_items = []
 
     for _ in range(NUM_ORDERS):
-        order_date = fake.date_time_between(start_date='-6m', end_date='now')
+        order_date = fake.date_time_between(start_date='2026-01-01', end_date='2026-05-31')
         created_at = order_date + timedelta(seconds=random.randint(0, 3600))
         customer_id = random.choice(customer_ids)
         status = random.choice(['PLACED', 'PAID', 'SHIPPED', 'DELIVERED', 'CANCELLED', 'RETURNED'])
@@ -246,9 +246,9 @@ def insert_fake_data():
     print("Generating Promotion data...")
     promotions = []
     for _ in range(NUM_PROMOTIONS):
-        created_at = fake.date_time_between(start_date='-6m', end_date='-1m')
-        start_date = created_at.date() + timedelta(days=random.randint(0, 10))
-        end_date = start_date + timedelta(days=random.randint(7, 30))
+        created_at = fake.date_time_between(start_date='2025-12-01', end_date='2026-01-31')
+        start_date = fake.date_time_between(start_date='2026-01-01', end_date='2026-04-30')
+        end_date = start_date + timedelta(days=random.randint(30, 50))
         discount_type = random.choice(['percentage', 'fixed_amount'])
         
         if discount_type == 'percentage':
@@ -288,7 +288,7 @@ def insert_fake_data():
             promo_products.append({
                 'promotion_id': p_id,
                 'product_id': prod_id,
-                'created_at': fake.date_time_between(start_date='-1m', end_date='now')
+                'created_at': fake.date_time_between(start_date='2025-12-01', end_date='2026-04-30')
             })
 
     df_promo_prod = pd.DataFrame(promo_products)
