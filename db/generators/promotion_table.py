@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS promotion (
     discount_value NUMERIC(10,2) CHECK (discount_value > 0 AND (discount_type = 'fixed_amount' OR discount_value <= 100)),
     start_date DATE CHECK (start_date >= DATE(created_at)),
     end_date DATE CHECK (end_date >= start_date),
-    created_at TIMESTAMP
+    created_at TIMESTAMPS
 );
 """
 

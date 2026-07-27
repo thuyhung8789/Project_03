@@ -1,5 +1,6 @@
 import logging
-from db.connection import get_connection
+from sqlalchemy import text
+from db.connection import get_engine
 from db.generators.brand_table import CREATE_BRAND_TABLE
 from db.generators.category_table import CREATE_CATEGORY_TABLE
 from db.generators.seller_table import CREATE_SELLER_TABLE
@@ -25,15 +26,17 @@ def create_tables():
         CREATE_PROMOTION_PRODUCT_TABLE
     ]
 
+    engine = get_engine()
     try:
-        with get_connection() as conn:
-            with conn.cursor() as cur:
+        with engine.connect() as conn:
+            with conn.begin():
                 for table_sql in tables:
-                    cur.execute(table_sql)
-                conn.commit()
-                logger.info("Tables created successfully.")
+                    conn.execute(text(table_sql))
+            logger.info("Tables created successfully.")
     except Exception as error:
         logger.error(f"Error while creating tables: {error}")
+    finally:
+        engine.dispose()
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
