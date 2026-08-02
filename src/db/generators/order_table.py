@@ -2,7 +2,7 @@ import logging
 import random
 import pandas as pd
 from datetime import datetime, timedelta
-from db.connection import get_connection
+from src.db.connection import get_connection
 
 logger = logging.getLogger(__name__)
 

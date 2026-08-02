@@ -10,16 +10,16 @@ from faker import Faker
 from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 
-from db.schema import create_tables
-from db.connection import get_url
-from db.generators.brand_table import generate_brand_data
-from db.generators.category_table import generate_category_data
-from db.generators.seller_table import generate_seller_data
-from db.generators.customer_table import generate_customer_data
-from db.generators.product_table import generate_product_data
-from db.generators.order_table import generate_order_data
-from db.generators.promotion_table import generate_promotion_data
-from db.generators.promotion_product_table import generate_promotion_product_data
+from src.db.schema import create_tables
+from src.db.connection import get_url
+from src.db.generators import generate_brand_data
+from src.db.generators import generate_category_data
+from src.db.generators import generate_seller_data
+from src.db.generators.customer_table import generate_customer_data
+from src.db.generators.product_table import generate_product_data
+from src.db.generators.order_table import generate_order_data
+from src.db.generators.promotion_table import generate_promotion_data
+from src.db.generators.promotion_product_table import generate_promotion_product_data
 
 # Load environment variables from .env file
 load_dotenv()

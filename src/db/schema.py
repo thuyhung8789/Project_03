@@ -1,15 +1,15 @@
 import logging
 from sqlalchemy import text
-from db.connection import get_engine
-from db.generators.brand_table import CREATE_BRAND_TABLE
-from db.generators.category_table import CREATE_CATEGORY_TABLE
-from db.generators.seller_table import CREATE_SELLER_TABLE
-from db.generators.customer_table import CREATE_CUSTOMER_TABLE
-from db.generators.product_table import CREATE_PRODUCT_TABLE
-from db.generators.order_table import CREATE_ORDER_TABLE
-from db.generators.order_item_table import CREATE_ORDER_ITEM_TABLE
-from db.generators.promotion_table import CREATE_PROMOTION_TABLE
-from db.generators.promotion_product_table import CREATE_PROMOTION_PRODUCT_TABLE
+from src.db.connection import get_engine
+from src.db.generators.brand_table import CREATE_BRAND_TABLE
+from src.db.generators.category_table import CREATE_CATEGORY_TABLE
+from src.db.generators.seller_table import CREATE_SELLER_TABLE
+from src.db.generators.customer_table import CREATE_CUSTOMER_TABLE
+from src.db.generators.product_table import CREATE_PRODUCT_TABLE
+from src.db.generators.order_table import CREATE_ORDER_TABLE
+from src.db.generators.order_item_table import CREATE_ORDER_ITEM_TABLE
+from src.db.generators.promotion_table import CREATE_PROMOTION_TABLE
+from src.db.generators.promotion_product_table import CREATE_PROMOTION_PRODUCT_TABLE
 
 logger = logging.getLogger(__name__)
 
